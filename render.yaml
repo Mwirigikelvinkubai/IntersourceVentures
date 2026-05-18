@@ -1,0 +1,44 @@
+# Render Blueprint — deploys Intersource Ventures with a persistent disk
+# Push this file to GitHub, then on Render click "New +" → "Blueprint" and
+# point it at your repo. Render will auto-detect this file.
+
+services:
+  - type: web
+    name: intersource-ventures
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: MPESA_ENV
+        value: sandbox
+      - key: PORT
+        value: 3000
+      # ─── Set these in the Render dashboard (mark as Secret) ─────
+      - key: CONSUMER_KEY
+        sync: false
+      - key: CONSUMER_SECRET
+        sync: false
+      - key: SHORTCODE
+        sync: false
+      - key: PASSKEY
+        sync: false
+      - key: CALLBACK_URL
+        sync: false
+      - key: ACCOUNT_REF
+        value: "37996"
+      - key: TRANSACTION_DESC
+        value: "Intersource Ventures Order"
+      - key: ADMIN_PASSWORD
+        sync: false
+    # Persistent disk so products.json + site.json survive redeploys.
+    # Free plan does not include disks — remove this block on free,
+    # or upgrade to the Starter plan to keep your data.
+    disk:
+      name: intersource-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

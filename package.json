@@ -1,8 +1,11 @@
 {
   "name": "intersource-ventures-server",
   "version": "1.0.0",
-  "description": "Intersource Ventures – Daraja M-Pesa STK Push backend",
+  "description": "Intersource Ventures Limited — wellness & baby distributor storefront + Daraja M-Pesa backend",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"

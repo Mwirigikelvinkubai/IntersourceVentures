@@ -4,13 +4,105 @@
 
 ```
 intersource-server/
-├── server.js          ← Express backend (Daraja API logic)
-├── .env               ← Your credentials (NEVER share this file)
-├── package.json       ← Node.js dependencies
-├── README.md          ← This file
+├── server.js               ← Express backend (Daraja + product/site CRUD)
+├── .env                    ← Your credentials (NEVER share / commit this)
+├── .gitignore              ← Excludes .env, node_modules, data/
+├── package.json            ← Node.js dependencies
+├── Procfile                ← For Heroku-style hosts
+├── render.yaml             ← Render Blueprint
+├── README.md               ← This file
+├── data/                   ← Auto-created on first run
+│   ├── products.json       ← Product catalogue
+│   └── site.json           ← Categories, badges, hero featured product
 └── public/
-    └── index.html     ← The full website (served by the server)
+    ├── index.html          ← Storefront (Bootstrap 5)
+    ├── admin.html          ← Admin dashboard (served at /admin)
+    ├── img/                ← Logo, favicons, app icons
+    ├── css/styles.css
+    └── js/
+        ├── app.js          ← Storefront logic
+        └── admin.js        ← Admin dashboard logic
 ```
+
+## Admin panel
+
+A password-protected admin dashboard lives at **http://localhost:3000/admin**
+(also linked discreetly in the footer of the storefront).
+
+The dashboard has four tabs:
+
+- **Products** — add, edit, upload images (or paste URLs), delete
+- **Categories** — manage the category filter pills on the storefront (label, slug, Bootstrap Icon)
+- **Badges** — manage the colored badges (NEW, SALE, HOT, or any custom badge with custom hex color)
+- **Hero Featured** — change the floating product card next to the hero headline
+
+The default admin password is set in `.env`:
+```
+ADMIN_PASSWORD=intersource2025
+```
+⚠ **Change this** before going live. The password is sent as the
+`x-admin-password` header to all `/api/admin/*` routes.
+
+## WhatsApp button
+
+A floating green WhatsApp icon (bottom-left) opens a chat with
+`+254 710 658 549` pre-filled with a friendly product inquiry.
+
+---
+
+## 🚀 Deploying to production
+
+### Option A — Render (recommended, simplest)
+
+1. Push this folder to a private GitHub repo.
+2. Sign in at **https://render.com** and click "New +" → "Blueprint".
+3. Connect your repo. Render reads `render.yaml` automatically.
+4. In the env-var section, set these as **Secret**:
+   - `CONSUMER_KEY`, `CONSUMER_SECRET` (from your Daraja app)
+   - `SHORTCODE`, `PASSKEY` (from your live Lipa na M-Pesa)
+   - `CALLBACK_URL` — set to `https://YOUR-RENDER-URL.onrender.com/api/mpesa/callback`
+     after the first deploy (you'll need to redeploy to apply it)
+   - `ADMIN_PASSWORD` — pick a strong password
+5. Click **Apply**. Render builds, deploys, and gives you a public HTTPS URL.
+
+⚠ **Free plan caveat:** Render's free tier wipes the filesystem on redeploy,
+so `data/products.json` resets to defaults each time. To keep your catalog,
+upgrade to the **Starter plan** (≈ $7/mo); the `render.yaml` already declares
+a 1 GB persistent disk.
+
+### Option B — Railway
+
+1. Push to GitHub.
+2. At **https://railway.app** → "New Project" → "Deploy from GitHub repo".
+3. Add all `.env` keys via the Railway dashboard.
+4. Railway provides a domain like `intersource.up.railway.app`.
+
+### Option C — DigitalOcean / your own VPS
+
+```bash
+# On your server
+git clone YOUR_REPO
+cd intersource-server
+npm install --production
+# Create /etc/intersource.env with your environment variables
+# Use pm2 or systemd to keep the process running
+npm install -g pm2
+pm2 start server.js --name intersource
+pm2 save
+```
+Put it behind nginx with a Let's Encrypt cert. Update your Daraja
+`CALLBACK_URL` to point at your real domain.
+
+### Daraja go-live checklist
+
+- [ ] `MPESA_ENV=production`
+- [ ] Live `CONSUMER_KEY` and `CONSUMER_SECRET`
+- [ ] Live `SHORTCODE` (400200) and `PASSKEY` (from Daraja portal)
+- [ ] `CALLBACK_URL` points to your real HTTPS domain — no ngrok
+- [ ] `ADMIN_PASSWORD` changed from the default
+- [ ] `.env` is **NOT** in git (verify with `git status`)
+
+---
 
 ---
 

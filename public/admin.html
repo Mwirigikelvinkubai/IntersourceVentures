@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin · Intersource Ventures</title>
+  <meta name="robots" content="noindex,nofollow" />
+
+  <link rel="icon" href="/img/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="/css/styles.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: linear-gradient(180deg, #f8fbf9 0%, #ffffff 100%);
+      min-height: 100vh;
+    }
+    .login-card {
+      max-width: 420px;
+      margin: 8vh auto;
+      background: #fff;
+      border-radius: 22px;
+      padding: 2.5rem;
+      box-shadow: 0 25px 60px rgba(15, 23, 42, 0.1);
+    }
+    .admin-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .admin-header {
+      background: var(--dark, #0f172a);
+      color: #fff;
+      border-radius: 18px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.4rem;
+      border: 1px solid #e2e8f0;
+    }
+    .stat-card .icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: var(--brand-soft, #e6f7ee);
+      color: var(--brand, #0a8f4a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+    .product-table-wrap {
+      background: #fff;
+      border-radius: 18px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .product-table img {
+      width: 50px; height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .badge-cat {
+      background: #f1f5f9;
+      color: #334155;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      text-transform: capitalize;
+      font-weight: 600;
+    }
+    .badge-tag {
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-tag.new { background: var(--brand, #0a8f4a); color: #fff; }
+    .badge-tag.sale { background: #ff7a18; color: #fff; }
+    .badge-tag.hot { background: #ef4444; color: #fff; }
+    .img-preview {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+    }
+    .upload-dropzone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+      min-height: 120px;
+      padding: 1rem;
+      border: 2px dashed #cbd5e1;
+      border-radius: 12px;
+      background: #f8fafc;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    .upload-dropzone:hover {
+      border-color: var(--brand, #0a8f4a);
+      background: #f0fdf4;
+      color: var(--brand, #0a8f4a);
+    }
+    .upload-dropzone i { font-size: 2rem; line-height: 1; }
+    .upload-dropzone.has-file {
+      border-color: var(--brand, #0a8f4a);
+      background: #f0fdf4;
+    }
+    .admin-tabs { gap: 0.25rem; }
+    .admin-tabs .nav-link {
+      color: #475569;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .admin-tabs .nav-link.active {
+      background: var(--brand, #0a8f4a);
+      color: #fff;
+      border-color: var(--brand, #0a8f4a);
+    }
+    .cat-icon-cell {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: var(--brand-soft, #e6f7ee);
+      color: var(--brand, #0a8f4a);
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .badge-swatch {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      margin-right: 0.4rem;
+      vertical-align: middle;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .badge-preview-pill {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+    .table > :not(caption) > * > * { padding: 0.85rem 0.5rem; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <!-- ─── LOGIN VIEW ─────────────────────────────────────── -->
+  <div id="loginView">
+    <div class="login-card">
+      <div class="text-center mb-4">
+        <img src="/img/logo.png" alt="Intersource Ventures Limited" style="height:90px;width:auto;margin-bottom:0.5rem;" />
+        <h3 class="fw-bold mb-1">Admin Login</h3>
+        <p class="text-muted small mb-0"><i class="bi bi-shield-lock-fill me-1"></i>Restricted access</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="mb-3">
+          <label class="form-label small fw-semibold">Password</label>
+          <input
+            id="passwordInput"
+            type="password"
+            class="form-control form-control-lg"
+            placeholder="Enter admin password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        <div id="loginError" class="alert alert-danger small d-none mb-3"></div>
+        <button class="btn btn-success btn-lg w-100 rounded-pill" type="submit">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Sign in
+        </button>
+      </form>
+
+      <div class="text-center mt-4">
+        <a href="/" class="small text-muted text-decoration-none">
+          <i class="bi bi-arrow-left me-1"></i>Back to website
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DASHBOARD ──────────────────────────────────────── -->
+  <div id="dashboardView" class="d-none">
+    <div class="admin-shell">
+
+      <div class="admin-header">
+        <div>
+          <h4 class="fw-bold mb-0">
+            <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
+          </h4>
+          <small class="text-white-50">Intersource Ventures Limited · Product Management</small>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="/" class="btn btn-outline-light btn-sm rounded-pill">
+            <i class="bi bi-house me-1"></i>View Site
+          </a>
+          <button id="logoutBtn" class="btn btn-danger btn-sm rounded-pill">
+            <i class="bi bi-box-arrow-right me-1"></i>Log out
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats row -->
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="stat-card d-flex align-items-center gap-3">
+            <div class="icon"><i class="bi bi-box-seam"></i></div>
+            <div>
+              <small class="text-muted d-block">Total products</small>
+              <strong class="fs-4" id="statTotal">0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card d-flex align-items-center gap-3">
+            <div class="icon"><i class="bi bi-tag-fill"></i></div>
+            <div>
+              <small class="text-muted d-block">On sale</small>
+              <strong class="fs-4" id="statSale">0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card d-flex align-items-center gap-3">
+            <div class="icon"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+            <div>
+              <small class="text-muted d-block">Categories</small>
+              <strong class="fs-4" id="statCats">0</strong>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card d-flex align-items-center gap-3">
+            <div class="icon"><i class="bi bi-currency-exchange"></i></div>
+            <div>
+              <small class="text-muted d-block">Avg price (KES)</small>
+              <strong class="fs-4" id="statAvg">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <ul class="nav nav-pills admin-tabs mb-3" role="tablist">
+        <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tabProducts" type="button">
+            <i class="bi bi-box-seam me-1"></i>Products
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabCategories" type="button">
+            <i class="bi bi-grid-3x3-gap-fill me-1"></i>Categories
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabBadges" type="button">
+            <i class="bi bi-tag-fill me-1"></i>Badges
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tabFeatured" type="button">
+            <i class="bi bi-star-fill me-1"></i>Hero Featured
+          </button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- ── PRODUCTS TAB ─────────────────────────────── -->
+        <div class="tab-pane fade show active" id="tabProducts">
+          <div class="product-table-wrap">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div>
+                <h5 class="fw-bold mb-0">Products</h5>
+                <small class="text-muted">Add, edit, or remove products from your store</small>
+              </div>
+              <div class="d-flex gap-2">
+                <input id="searchProducts" type="search" class="form-control form-control-sm" placeholder="Search…" style="max-width:200px" />
+                <button class="btn btn-success btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#productModal" id="newProductBtn">
+                  <i class="bi bi-plus-lg me-1"></i>Add Product
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle product-table">
+                <thead class="text-muted small text-uppercase">
+                  <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Badge</th>
+                    <th class="text-end">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="productTbody"></tbody>
+              </table>
+            </div>
+
+            <div id="emptyState" class="text-center py-5 text-muted d-none">
+              <i class="bi bi-inbox display-3 d-block mb-3 opacity-25"></i>
+              No products yet. Click <strong>Add Product</strong> to get started.
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CATEGORIES TAB ───────────────────────────── -->
+        <div class="tab-pane fade" id="tabCategories">
+          <div class="product-table-wrap">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div>
+                <h5 class="fw-bold mb-0">Categories</h5>
+                <small class="text-muted">Update the category filters shown on the storefront</small>
+              </div>
+              <button class="btn btn-success btn-sm rounded-pill px-3" id="addCategoryBtn">
+                <i class="bi bi-plus-lg me-1"></i>Add Category
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead class="text-muted small text-uppercase">
+                  <tr>
+                    <th style="width:90px">Icon</th>
+                    <th>Label</th>
+                    <th>Slug</th>
+                    <th class="text-end" style="width:160px">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="categoryTbody"></tbody>
+              </table>
+            </div>
+
+            <p class="text-muted small mb-0">
+              <i class="bi bi-info-circle me-1"></i>
+              Icon names come from <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener">Bootstrap Icons</a> — e.g. <code>bi-capsule</code>, <code>bi-droplet-half</code>, <code>bi-stack</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- ── BADGES TAB ───────────────────────────────── -->
+        <div class="tab-pane fade" id="tabBadges">
+          <div class="product-table-wrap">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div>
+                <h5 class="fw-bold mb-0">Product badges</h5>
+                <small class="text-muted">Highlight new, sale, or featured items on the product cards</small>
+              </div>
+              <button class="btn btn-success btn-sm rounded-pill px-3" id="addBadgeBtn">
+                <i class="bi bi-plus-lg me-1"></i>Add Badge
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead class="text-muted small text-uppercase">
+                  <tr>
+                    <th style="width:100px">Preview</th>
+                    <th>Label</th>
+                    <th>Slug</th>
+                    <th style="width:120px">Color</th>
+                    <th class="text-end" style="width:160px">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="badgeTbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── FEATURED TAB ─────────────────────────────── -->
+        <div class="tab-pane fade" id="tabFeatured">
+          <div class="product-table-wrap">
+            <h5 class="fw-bold mb-1">Hero featured product</h5>
+            <small class="text-muted d-block mb-3">This is the card that floats next to the main hero headline.</small>
+
+            <form id="featuredForm">
+              <div class="row g-3">
+                <div class="col-md-5">
+                  <label class="form-label small fw-semibold">Image</label>
+                  <div class="btn-group btn-group-sm w-100 mb-2" role="group">
+                    <input type="radio" class="btn-check" name="featImgMode" id="featImgModeUpload" value="upload" checked />
+                    <label class="btn btn-outline-success" for="featImgModeUpload">
+                      <i class="bi bi-upload me-1"></i>Upload file
+                    </label>
+                    <input type="radio" class="btn-check" name="featImgMode" id="featImgModeUrl" value="url" />
+                    <label class="btn btn-outline-success" for="featImgModeUrl">
+                      <i class="bi bi-link-45deg me-1"></i>Paste URL
+                    </label>
+                  </div>
+
+                  <div id="featUploadPane">
+                    <label for="featImgFile" class="upload-dropzone">
+                      <i class="bi bi-cloud-arrow-up"></i>
+                      <div class="small fw-semibold">Click to upload</div>
+                      <div class="text-muted" style="font-size:0.75rem">Auto-resized to 800px</div>
+                    </label>
+                    <input type="file" id="featImgFile" accept="image/*" hidden />
+                  </div>
+
+                  <div id="featUrlPane" class="d-none">
+                    <input type="url" id="featImgUrl" class="form-control form-control-sm" placeholder="https://…" />
+                  </div>
+
+                  <img id="featImgPreview" class="img-preview mt-2" alt="" style="display:none;" />
+                </div>
+
+                <div class="col-md-7">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label small fw-semibold">Tag (small text above product)</label>
+                      <input type="text" id="featTag" class="form-control" placeholder="Featured · Supplements" />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label small fw-semibold">Product name</label>
+                      <input type="text" id="featName" class="form-control" placeholder="Vitamin C 1000mg · 60s" />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label small fw-semibold">Price (KES)</label>
+                      <input type="number" id="featPrice" class="form-control" min="0" placeholder="850" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="featError" class="alert alert-danger small mt-3 d-none"></div>
+              <div id="featSuccess" class="alert alert-success small mt-3 d-none">
+                <i class="bi bi-check-circle-fill me-1"></i>Featured product saved.
+              </div>
+
+              <button type="submit" class="btn btn-success rounded-pill px-4 mt-3" id="saveFeaturedBtn">
+                <i class="bi bi-check-lg me-1"></i>Save Featured
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── PRODUCT MODAL ──────────────────────────────────── -->
+  <div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold" id="modalTitle">Add Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="productForm">
+          <div class="modal-body">
+            <input type="hidden" id="productId" />
+
+            <div class="row g-3">
+              <div class="col-md-5">
+                <label class="form-label small fw-semibold">Product image</label>
+
+                <!-- Mode toggle -->
+                <div class="btn-group btn-group-sm w-100 mb-2" role="group" aria-label="Image input mode">
+                  <input type="radio" class="btn-check" name="imgMode" id="imgModeUpload" value="upload" checked />
+                  <label class="btn btn-outline-success" for="imgModeUpload">
+                    <i class="bi bi-upload me-1"></i>Upload file
+                  </label>
+                  <input type="radio" class="btn-check" name="imgMode" id="imgModeUrl" value="url" />
+                  <label class="btn btn-outline-success" for="imgModeUrl">
+                    <i class="bi bi-link-45deg me-1"></i>Paste URL
+                  </label>
+                </div>
+
+                <!-- Upload field -->
+                <div id="uploadPane">
+                  <label for="productImgFile" class="upload-dropzone">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                    <div class="small fw-semibold">Click to upload an image</div>
+                    <div class="text-muted" style="font-size:0.75rem">JPG, PNG, WebP · auto-resized to 600px</div>
+                  </label>
+                  <input type="file" id="productImgFile" accept="image/*" hidden />
+                </div>
+
+                <!-- URL field -->
+                <div id="urlPane" class="d-none">
+                  <input type="url" id="productImg" class="form-control form-control-sm" placeholder="https://…" />
+                </div>
+
+                <!-- Preview -->
+                <img id="imgPreview" class="img-preview mt-2" alt="preview" style="display:none;" />
+                <button type="button" id="clearImgBtn" class="btn btn-link btn-sm text-danger d-none p-0 mt-1">
+                  <i class="bi bi-x-circle me-1"></i>Remove image
+                </button>
+              </div>
+
+              <div class="col-md-7">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold">Product name *</label>
+                    <input type="text" id="productName" class="form-control" required placeholder="e.g. Premium Wireless Headphones" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Category *</label>
+                    <select id="productCategory" class="form-select" required>
+                      <option value="">Choose…</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Badge</label>
+                    <select id="productBadge" class="form-select">
+                      <option value="">None</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Price (KES) *</label>
+                    <input type="number" id="productPrice" class="form-control" min="1" step="1" required placeholder="e.g. 2500" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Old price (optional)</label>
+                    <input type="number" id="productOldPrice" class="form-control" min="0" step="1" placeholder="e.g. 3500" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Rating (0-5)</label>
+                    <input type="number" id="productRating" class="form-control" min="0" max="5" step="0.1" placeholder="e.g. 4.5" />
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Reviews count</label>
+                    <input type="number" id="productReviews" class="form-control" min="0" step="1" placeholder="e.g. 120" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="formError" class="alert alert-danger small mt-3 d-none"></div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success rounded-pill px-4" id="saveBtn">
+              <i class="bi bi-check-lg me-1"></i>Save Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── DELETE CONFIRM MODAL ───────────────────────────── -->
+  <div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content border-0 shadow-lg rounded-4 text-center">
+        <div class="modal-body p-4">
+          <div class="fail-x mx-auto mb-3"><i class="bi bi-trash"></i></div>
+          <h5 class="fw-bold">Delete this product?</h5>
+          <p class="text-muted small mb-4">This action cannot be undone.</p>
+          <div class="d-grid gap-2">
+            <button id="confirmDeleteBtn" class="btn btn-danger rounded-pill">Yes, delete</button>
+            <button class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CATEGORY MODAL ─────────────────────────────────── -->
+  <div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold" id="catModalTitle">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="categoryForm">
+          <div class="modal-body">
+            <input type="hidden" id="catEditSlug" />
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label small fw-semibold">Label *</label>
+                <input type="text" id="catLabel" class="form-control" required placeholder="e.g. Supplements" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold">Slug *</label>
+                <input type="text" id="catSlug" class="form-control" required placeholder="e.g. supplements" />
+                <small class="text-muted">lowercase, hyphens only</small>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold">Icon class</label>
+                <input type="text" id="catIcon" class="form-control" placeholder="bi-capsule" />
+                <small class="text-muted">Bootstrap Icons name</small>
+              </div>
+            </div>
+            <div id="catError" class="alert alert-danger small mt-3 d-none"></div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success rounded-pill px-4">
+              <i class="bi bi-check-lg me-1"></i>Save Category
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── BADGE MODAL ────────────────────────────────────── -->
+  <div class="modal fade" id="badgeModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0">
+          <h5 class="modal-title fw-bold" id="badgeModalTitle">Add Badge</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="badgeForm">
+          <div class="modal-body">
+            <input type="hidden" id="badgeEditSlug" />
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold">Label *</label>
+                <input type="text" id="badgeLabel" class="form-control" required placeholder="e.g. NEW" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold">Slug *</label>
+                <input type="text" id="badgeSlug" class="form-control" required placeholder="e.g. new" />
+                <small class="text-muted">lowercase, hyphens only</small>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold">Color</label>
+                <div class="d-flex gap-2 align-items-center">
+                  <input type="color" id="badgeColor" class="form-control form-control-color" value="#0a8f4a" />
+                  <input type="text" id="badgeColorHex" class="form-control" placeholder="#0a8f4a" />
+                </div>
+              </div>
+              <div class="col-12">
+                <span id="badgePreview" class="badge-preview-pill" style="background:#0a8f4a">PREVIEW</span>
+              </div>
+            </div>
+            <div id="badgeError" class="alert alert-danger small mt-3 d-none"></div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-link text-muted" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success rounded-pill px-4">
+              <i class="bi bi-check-lg me-1"></i>Save Badge
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>
