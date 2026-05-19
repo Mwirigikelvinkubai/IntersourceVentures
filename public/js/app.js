@@ -2,7 +2,7 @@
    INTERSOURCE VENTURES — Frontend logic
    - Product catalog (in-memory)
    - Cart system (localStorage)
-   - M-Pesa STK Push integration with backend
+   - WhatsApp checkout (no online payment processing)
    ========================================================= */
 
 // ─── DATA ──────────────────────────────────────────────────
@@ -264,7 +264,6 @@ function renderCart() {
   const total = cartTotal();
   $("#cartSubtotal").textContent = fmt(total);
   $("#cartTotal").textContent = fmt(total);
-  $("#payAmount").textContent = fmt(total);
 }
 
 // ─── TOAST (lightweight) ───────────────────────────────────
@@ -291,87 +290,27 @@ function showToast(msg) {
   }, 2400);
 }
 
-// ─── M-PESA PAYMENT FLOW ───────────────────────────────────
-let pollTimer = null;
+// ─── WHATSAPP CHECKOUT ─────────────────────────────────────
+// Builds an order summary and opens WhatsApp with it pre-filled.
+const WHATSAPP_NUMBER = "254710658549";
 
-async function initiatePayment(phone, amount) {
-  showPayStep(2);
-  $("#payStatus").textContent = "sending prompt…";
+function checkoutViaWhatsApp() {
+  if (cart.length === 0) return;
 
-  try {
-    const res = await fetch("/api/mpesa/stkpush", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        phone,
-        amount,
-        orderId: "IV-" + Date.now(),
-      }),
-    });
-    const data = await res.json();
+  const lines = cart.map(
+    (c) => `• ${c.name} × ${c.qty} — ${fmt(c.price * c.qty)}`
+  );
+  const total = cartTotal();
+  const orderId = "IV-" + Date.now();
 
-    if (!data.success) {
-      showPayError(data.message || "Could not start the payment.");
-      return;
-    }
+  const message =
+    `Hi Intersource Ventures! I'd like to place an order:%0A%0A` +
+    lines.join("%0A") +
+    `%0A%0A*Total: ${fmt(total)}*` +
+    `%0AOrder ref: ${orderId}` +
+    `%0A%0APlease confirm availability and payment details.`;
 
-    $("#payStatus").textContent = "awaiting PIN…";
-    startPolling(data.checkoutRequestId);
-  } catch (err) {
-    showPayError("Network error. Please check your connection and try again.");
-    console.error(err);
-  }
-}
-
-function startPolling(checkoutRequestId) {
-  let attempts = 0;
-  const MAX = 30; // ~90s
-  pollTimer = setInterval(async () => {
-    attempts++;
-    try {
-      const res = await fetch("/api/mpesa/status/" + checkoutRequestId);
-      const data = await res.json();
-
-      if (data.status === "success") {
-        clearInterval(pollTimer);
-        $("#receiptNo").textContent = data.mpesaReceiptNumber || "—";
-        showPayStep(3);
-        cart = [];
-        saveCart();
-        renderCart();
-        return;
-      }
-      if (data.status === "failed") {
-        clearInterval(pollTimer);
-        showPayError(data.reason || "Payment was cancelled or failed.");
-        return;
-      }
-      $("#payStatus").textContent = `waiting… (${attempts * 3}s)`;
-    } catch (err) {
-      console.warn("[poll] error:", err);
-    }
-
-    if (attempts >= MAX) {
-      clearInterval(pollTimer);
-      showPayError("Timed out waiting for payment. Please try again.");
-    }
-  }, 3000);
-}
-
-function showPayStep(n) {
-  [1, 2, 3, 4].forEach((i) => $("#payStep" + i).classList.add("d-none"));
-  $("#payStep" + n).classList.remove("d-none");
-}
-
-function showPayError(msg) {
-  $("#payError").textContent = msg;
-  showPayStep(4);
-}
-
-function resetPayment() {
-  if (pollTimer) clearInterval(pollTimer);
-  showPayStep(1);
-  $("#payForm").reset();
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, "_blank");
 }
 
 // expose for inline handlers in HTML
@@ -379,7 +318,6 @@ window.toggleFav = toggleFav;
 window.addToCart = addToCart;
 window.changeQty = changeQty;
 window.removeFromCart = removeFromCart;
-window.resetPayment = resetPayment;
 
 // ─── EVENT WIRING ──────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
@@ -409,20 +347,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderProducts();
   });
 
-  // Pay form
-  $("#payForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const phone = $("#phoneInput").value.trim();
-    const amount = cartTotal();
-    if (!phone || amount <= 0) return;
-    initiatePayment(phone, amount);
-  });
-
-  // Reset pay modal when shown
-  $("#payModal").addEventListener("show.bs.modal", () => {
-    resetPayment();
-    $("#payAmount").textContent = fmt(cartTotal());
-  });
+  // Checkout via WhatsApp
+  const checkoutBtn = $("#checkoutBtn");
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", checkoutViaWhatsApp);
+  }
 
   // Contact form (demo only — wire to real endpoint as needed)
   $("#contactForm").addEventListener("submit", (e) => {
