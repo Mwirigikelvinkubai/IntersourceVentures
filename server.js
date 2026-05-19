@@ -88,9 +88,9 @@ const DEFAULT_SITE = {
     { slug: "mom-care",    label: "Mom Care",    icon: "bi-heart-pulse-fill" },
   ],
   badges: [
-    { slug: "new",  label: "NEW",  color: "#0a8f4a" },
-    { slug: "sale", label: "SALE", color: "#ff7a18" },
-    { slug: "hot",  label: "HOT",  color: "#ef4444" },
+    { slug: "new",  label: "NEW",  color: "#00B4D8" },
+    { slug: "sale", label: "SALE", color: "#FF7A18" },
+    { slug: "hot",  label: "HOT",  color: "#EF4444" },
   ],
   featured: {
     image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=800&q=80",
@@ -213,7 +213,7 @@ app.put("/api/admin/site", requireAdmin, (req, res) => {
       .map((b) => ({
         slug: String(b.slug).trim().toLowerCase().replace(/\s+/g, "-"),
         label: String(b.label).trim(),
-        color: /^#[0-9a-f]{3,8}$/i.test(b.color || "") ? b.color : "#0a8f4a",
+        color: /^#[0-9a-f]{3,8}$/i.test(b.color || "") ? b.color : "#00B4D8",
       }));
   }
   if (req.body.featured && typeof req.body.featured === "object") {

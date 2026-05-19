@@ -275,7 +275,7 @@ function showToast(msg) {
     t.id = "toast";
     t.style.cssText = `
       position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
-      background:#0f172a;color:#fff;padding:0.75rem 1.25rem;border-radius:999px;
+      background:#2A3A4E;color:#fff;padding:0.75rem 1.25rem;border-radius:999px;
       font-size:0.9rem;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,0.25);
       opacity:0;transition:opacity 0.3s,bottom 0.3s;pointer-events:none;
     `;

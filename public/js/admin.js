@@ -283,9 +283,9 @@ function openNewBadge() {
   $("#badgeEditSlug").value = "";
   $("#badgeLabel").value = "";
   $("#badgeSlug").value = "";
-  $("#badgeColor").value = "#0a8f4a";
-  $("#badgeColorHex").value = "#0a8f4a";
-  $("#badgePreview").style.background = "#0a8f4a";
+  $("#badgeColor").value = "#00B4D8";
+  $("#badgeColorHex").value = "#00B4D8";
+  $("#badgePreview").style.background = "#00B4D8";
   $("#badgePreview").textContent = "PREVIEW";
   hideError($("#badgeError"));
   badgeModal.show();

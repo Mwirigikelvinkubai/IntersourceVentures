@@ -4,23 +4,24 @@
    ========================================================= */
 
 :root {
-  --brand: #0a8f4a;
-  --brand-dark: #066b37;
-  --brand-light: #2bc77b;
-  --brand-soft: #e6f7ee;
-  --accent: #ff7a18;
-  --accent-soft: #fff1e6;
-  --dark: #0f172a;
+  /* Brand palette — sourced from the Intersource logo */
+  --brand: #00B4D8;         /* primary cyan (logo "I" stroke + "INTERSOURCE") */
+  --brand-dark: #0077B6;    /* darker cyan for hover / dark states */
+  --brand-light: #5BD8E8;   /* light electric cyan (logo inner panel) */
+  --brand-soft: #EAF8FC;    /* very pale cyan tint for soft backgrounds */
+  --accent: #FF7A18;        /* warm orange accent (kept — pops against cyan) */
+  --accent-soft: #FFF1E6;
+  --dark: #2A3A4E;          /* slate navy (logo backdrop) */
   --gray-50: #f8fafc;
   --gray-100: #f1f5f9;
   --gray-200: #e2e8f0;
   --gray-500: #64748b;
   --gray-700: #334155;
-  --shadow-sm: 0 4px 12px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 10px 30px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 25px 60px rgba(15, 23, 42, 0.15);
-  --grad: linear-gradient(135deg, #0a8f4a 0%, #2bc77b 100%);
-  --grad-accent: linear-gradient(135deg, #ff7a18 0%, #ffba49 100%);
+  --shadow-sm: 0 4px 12px rgba(26, 43, 60, 0.08);
+  --shadow-md: 0 10px 30px rgba(26, 43, 60, 0.10);
+  --shadow-lg: 0 25px 60px rgba(26, 43, 60, 0.18);
+  --grad: linear-gradient(135deg, #0077B6 0%, #00B4D8 100%);
+  --grad-accent: linear-gradient(135deg, #FF7A18 0%, #FFBA49 100%);
 }
 
 /* Bootstrap success override */
@@ -100,7 +101,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #00729b;
+  color: var(--brand-dark);
 }
 .brand-sub {
   font-size: 0.65rem;
@@ -124,7 +125,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   color: #fff;
   border-radius: 10px;
   font-size: 1.1rem;
-  box-shadow: 0 6px 18px rgba(10, 143, 74, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 180, 216, 0.35);
 }
 
 /* Footer logo */
@@ -175,7 +176,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   padding: 0.5rem 1rem;
   font-weight: 600;
   font-size: 0.78rem;
-  border: 1px solid rgba(10, 143, 74, 0.15);
+  border: 1px solid rgba(0, 180, 216, 0.15);
 }
 .hero h1 { font-size: clamp(2.3rem, 5vw, 4rem); }
 .hero-stats { max-width: 460px; }
@@ -273,7 +274,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   background: var(--grad);
   border-color: transparent;
   color: #fff;
-  box-shadow: 0 12px 28px rgba(10, 143, 74, 0.35);
+  box-shadow: 0 12px 28px rgba(0, 180, 216, 0.35);
 }
 .cat-card.active i { color: #fff; }
 
@@ -392,7 +393,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 .btn-add-cart:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(10, 143, 74, 0.35);
+  box-shadow: 0 8px 18px rgba(0, 180, 216, 0.35);
 }
 
 /* ─── ABOUT ─────────────────────────────── */
@@ -503,7 +504,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
 }
 .contact-form-card .form-control:focus {
   border-color: var(--brand);
-  box-shadow: 0 0 0 0.2rem rgba(10, 143, 74, 0.15);
+  box-shadow: 0 0 0 0.2rem rgba(0, 180, 216, 0.15);
 }
 
 .social-btn, .social-btn-light {
@@ -600,7 +601,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 2.2rem;
-  box-shadow: 0 14px 30px rgba(10, 143, 74, 0.35);
+  box-shadow: 0 14px 30px rgba(0, 180, 216, 0.35);
 }
 .success-check, .fail-x {
   width: 80px; height: 80px;
@@ -683,7 +684,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   position: absolute;
   left: 72px;
   white-space: nowrap;
-  background: #0f172a;
+  background: #2A3A4E;
   color: #fff;
   padding: 0.5rem 0.85rem;
   border-radius: 999px;
@@ -700,7 +701,7 @@ h1, h2, h3, h4, h5, h6, .display-1, .display-2, .display-3, .display-4, .display
   top: 50%; left: -5px;
   transform: translateY(-50%);
   border: 5px solid transparent;
-  border-right-color: #0f172a;
+  border-right-color: #2A3A4E;
 }
 .whatsapp-float:hover .whatsapp-tooltip {
   opacity: 1;
