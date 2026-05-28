@@ -98,6 +98,11 @@ const DEFAULT_SITE = {
     name: "Vitamin C 1000mg · 60s",
     price: 850,
   },
+  about: {
+    image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&w=800&q=80",
+    years: "5+",
+    caption: "Years of trust in Kenya",
+  },
 };
 
 function ensureSiteFile() {
@@ -116,6 +121,7 @@ function readSite() {
       categories: Array.isArray(data.categories) ? data.categories : DEFAULT_SITE.categories,
       badges: Array.isArray(data.badges) ? data.badges : DEFAULT_SITE.badges,
       featured: { ...DEFAULT_SITE.featured, ...(data.featured || {}) },
+      about: { ...DEFAULT_SITE.about, ...(data.about || {}) },
     };
   } catch {
     return { ...DEFAULT_SITE };
@@ -222,6 +228,13 @@ app.put("/api/admin/site", requireAdmin, (req, res) => {
       tag: String(req.body.featured.tag || "").trim(),
       name: String(req.body.featured.name || "").trim(),
       price: Number(req.body.featured.price) || 0,
+    };
+  }
+  if (req.body.about && typeof req.body.about === "object") {
+    next.about = {
+      image: String(req.body.about.image || "").trim(),
+      years: String(req.body.about.years || "").trim().slice(0, 12),
+      caption: String(req.body.about.caption || "").trim().slice(0, 120),
     };
   }
 

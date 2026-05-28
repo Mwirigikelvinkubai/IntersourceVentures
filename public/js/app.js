@@ -12,6 +12,7 @@ let SITE = {
   categories: [],
   badges: [],
   featured: { image: "", tag: "", name: "", price: 0 },
+  about: { image: "", years: "", caption: "" },
 };
 
 const FALLBACK_PRODUCTS = [
@@ -45,9 +46,21 @@ async function loadSite() {
     if (data && Array.isArray(data.categories)) SITE.categories = data.categories;
     if (data && Array.isArray(data.badges)) SITE.badges = data.badges;
     if (data && data.featured) SITE.featured = data.featured;
+    if (data && data.about) SITE.about = data.about;
   } catch (err) {
     console.warn("[site] using defaults:", err);
   }
+}
+
+// ─── RENDERING: About section image + overlay ─────────────
+function renderAbout() {
+  const a = SITE.about || {};
+  const img = document.getElementById("aboutImg");
+  if (img && a.image) img.src = a.image;
+  const years = document.getElementById("aboutYears");
+  if (years && a.years) years.textContent = a.years;
+  const caption = document.getElementById("aboutCaption");
+  if (caption && a.caption) caption.textContent = a.caption;
 }
 
 // ─── RENDERING: hero featured + categories ────────────────
@@ -330,6 +343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load site settings + products in parallel, then render
   await Promise.all([loadSite(), loadProducts()]);
   renderHeroFeatured();
+  renderAbout();
   renderCategories();
   renderProducts();
   renderCart();

@@ -9,11 +9,17 @@ const $$ = (s) => document.querySelectorAll(s);
 const KEY = "intersource_admin_pw";
 
 let products = [];
-let site = { categories: [], badges: [], featured: { image: "", tag: "", name: "", price: 0 } };
+let site = {
+  categories: [],
+  badges: [],
+  featured: { image: "", tag: "", name: "", price: 0 },
+  about: { image: "", years: "", caption: "" },
+};
 let searchTerm = "";
 let productModal, confirmModal, categoryModal, badgeModal, deletePendingId = null;
 let deletePendingKind = "product"; // "product" | "category" | "badge"
 let featuredImgValue = "";
+let aboutImgValue = "";
 
 // ─── AUTH ──────────────────────────────────────────────────
 function getPassword() {
@@ -59,6 +65,7 @@ async function fetchSite() {
   renderBadgesTable();
   renderProductSelectors();
   renderFeaturedForm();
+  renderAboutForm();
 }
 
 async function saveSite(partial) {
@@ -247,6 +254,37 @@ function renderFeaturedForm() {
     $("#featImgUrl").value = "";
     $("#featUploadPane").classList.remove("d-none");
     $("#featUrlPane").classList.add("d-none");
+  }
+}
+
+// ─── ABOUT FORM ────────────────────────────────────────────
+function renderAboutForm() {
+  const a = site.about || {};
+  const yearsEl = $("#aboutYearsInput");
+  const captionEl = $("#aboutCaptionInput");
+  if (!yearsEl) return; // form not on this page
+  yearsEl.value = a.years || "";
+  captionEl.value = a.caption || "";
+  aboutImgValue = a.image || "";
+
+  const preview = $("#aboutImgPreview");
+  if (aboutImgValue) {
+    preview.src = aboutImgValue;
+    preview.style.display = "block";
+  } else {
+    preview.style.display = "none";
+  }
+  const isRemote = /^https?:\/\//i.test(aboutImgValue);
+  if (isRemote) {
+    $("#aboutImgModeUrl").checked = true;
+    $("#aboutImgUrl").value = aboutImgValue;
+    $("#aboutUploadPane").classList.add("d-none");
+    $("#aboutUrlPane").classList.remove("d-none");
+  } else {
+    $("#aboutImgModeUpload").checked = true;
+    $("#aboutImgUrl").value = "";
+    $("#aboutUploadPane").classList.remove("d-none");
+    $("#aboutUrlPane").classList.add("d-none");
   }
 }
 
@@ -712,6 +750,64 @@ document.addEventListener("DOMContentLoaded", async () => {
       showError($("#featError"), err.message);
     } finally {
       $("#saveFeaturedBtn").disabled = false;
+    }
+  });
+
+  // ─── ABOUT FORM ──────────────────────────────────────────
+  // Mode toggle
+  $$('input[name="aboutImgMode"]').forEach(r => {
+    r.addEventListener("change", () => {
+      $("#aboutUploadPane").classList.toggle("d-none", r.value !== "upload");
+      $("#aboutUrlPane").classList.toggle("d-none", r.value !== "url");
+    });
+  });
+  // URL input updates preview
+  $("#aboutImgUrl").addEventListener("input", (e) => {
+    aboutImgValue = e.target.value.trim();
+    const preview = $("#aboutImgPreview");
+    preview.src = aboutImgValue;
+    preview.style.display = aboutImgValue ? "block" : "none";
+  });
+  // File upload
+  $("#aboutImgFile").addEventListener("change", async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      showError($("#aboutError"), "Please pick an image file.");
+      return;
+    }
+    try {
+      // About image is bigger; downsize to 1200px
+      const dataUrl = await fileToDataUrlMax(file, 1200);
+      aboutImgValue = dataUrl;
+      const preview = $("#aboutImgPreview");
+      preview.src = dataUrl;
+      preview.style.display = "block";
+    } catch (err) {
+      showError($("#aboutError"), err.message);
+    }
+  });
+  $("#aboutForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    hideError($("#aboutError"));
+    $("#aboutSuccess").classList.add("d-none");
+    const payload = {
+      about: {
+        image: aboutImgValue || "",
+        years: $("#aboutYearsInput").value.trim(),
+        caption: $("#aboutCaptionInput").value.trim(),
+      },
+    };
+    try {
+      $("#saveAboutBtn").disabled = true;
+      await saveSite(payload);
+      await fetchSite();
+      $("#aboutSuccess").classList.remove("d-none");
+      setTimeout(() => $("#aboutSuccess").classList.add("d-none"), 4000);
+    } catch (err) {
+      showError($("#aboutError"), err.message);
+    } finally {
+      $("#saveAboutBtn").disabled = false;
     }
   });
 });
